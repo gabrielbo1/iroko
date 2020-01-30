@@ -12,4 +12,4 @@
 
 ![Iroko](gopher.png)
 
-Sistema para apoio para comercialização de software distribuído. 
+Sistema para apoio de comercialização de softwares distribuídos. 
