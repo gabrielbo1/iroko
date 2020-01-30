@@ -10,4 +10,6 @@
 [godoc]: https://godoc.org/github.com/xo/dburl?status.svg (GoDoc)
 [godoc-link]: https://godoc.org/github.com/gabrielbo1/iroko
 
+![Iroko](gopher.png)
+
 Sistema para apoio para comercialização de software distribuído. 
