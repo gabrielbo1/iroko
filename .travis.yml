@@ -1,0 +1,33 @@
+language: go
+
+go:
+  - 1.13.x
+
+sudo: required
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+before_install:
+  # install heroku CLI
+  - wget -qO- https://toolbelt.heroku.com/install.sh | sh
+  # login to docker registries (dockerhub + heroku)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$HEROKU_USERNAME "| docker login --username=$HEROKU_USERNAME  --password=$HEROKU_API_KEY registry.heroku.com
+script:
+  -  docker build -t gabrielbo1/iroko:${TAG} .
+  -  docker tag gabrielbo1/kronos registry.heroku.com/$HEROKU_APP_NAME/web
+deploy:
+  provider: script
+  script:
+    # push to dockerhub & heroku
+    docker push gabrielbo1/iroko;
+    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
+    heroku container:release web --app $HEROKU_APP_NAME
+  on:
+    branch: master
