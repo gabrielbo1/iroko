@@ -1,20 +1,17 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
-    "os"
+	"fmt"
+	"net/http"
+
+	"github.com/gabrielbo1/iroko/config"
 )
 
 func helloServer(w http.ResponseWriter, r *http.Request) {
-   fmt.Fprint(w, "Hello, word!")
+	fmt.Fprint(w, "Hello, word!")
 }
 
 func main() {
-    port := os.Getenv("PORT") // Heroku provides the port to bind to
-    if port == "" {
-      port = "8080"
-    }
-    http.HandleFunc("/", helloServer)
-    http.ListenAndServe(":" + port, nil)
+	http.HandleFunc("/", helloServer)
+	http.ListenAndServe(":"+config.EnvironmentVariableValue(config.Port), nil)
 }
