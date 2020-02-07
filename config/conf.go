@@ -1,6 +1,13 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"math/rand"
+	"net"
+	"os"
+	"strconv"
+	"time"
+)
 
 // EnvironmentVariable - Especific type to environment variables.
 type EnvironmentVariable string
@@ -22,6 +29,10 @@ const (
 	PostgresUser = "POSTGRES_USER"
 	// PostgresPassword - PostgreSQL user.
 	PostgresPassword = "POSTGRES_PASSWORD"
+	// AddressInstance - Ip application.
+	AddressInstance = "ADDRESS_INSTANCE"
+	// RandomFreePort - free PORT.
+	RandomFreePort = "RandomFreePort"
 )
 
 func getVariable(name EnvironmentVariable, defaultValue string) string {
@@ -40,7 +51,7 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	case ConsulActive:
 		return getVariable(ConsulActive, "false")
 	case ConsulAddress:
-		return getVariable(ConsulAddress, "consul")
+		return getVariable(ConsulAddress, "127.0.0.1")
 	case ConsulPort:
 		return getVariable(ConsulPort, "8500")
 	case PostgresAddress:
@@ -51,6 +62,22 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 		return getVariable(PostgresUser, "postgres")
 	case PostgresPassword:
 		return getVariable(PostgresPassword, "123456")
+	case AddressInstance:
+		addrs, err := net.InterfaceAddrs()
+		if err != nil {
+			panic(err)
+		}
+		for _, a := range addrs {
+			if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+				if ipnet.IP.To4() != nil {
+					return ipnet.IP.String()
+				}
+			}
+		}
+		panic(fmt.Errorf("Impossible to determinate IP Address"))
+	case RandomFreePort:
+		rand.Seed(time.Now().UnixNano())
+		return strconv.Itoa(rand.Intn(20000-10000) + 10000)
 	}
 	return ""
 }
