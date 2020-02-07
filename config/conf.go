@@ -63,6 +63,9 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	case PostgresPassword:
 		return getVariable(PostgresPassword, "123456")
 	case AddressInstance:
+		if a := getVariable(AddressInstance, ""); a != "" {
+			return a
+		}
 		addrs, err := net.InterfaceAddrs()
 		if err != nil {
 			panic(err)
