@@ -23,6 +23,7 @@ script:
   - /bin/sh -c './build/build.sh'
   - /bin/sh -c 'if [ -f ./build/build_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/build_$TRAVIS_CPU_ARCH.sh ; fi'
 deploy:
+  skip_cleanup: true
   provider: script
   script:
     # push to dockerhub & heroku
