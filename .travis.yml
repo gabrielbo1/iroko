@@ -27,7 +27,6 @@ deploy:
   script:
     # push to dockerhub & heroku
     docker push gabrielbo1/iroko;
-    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
-    heroku container:release web --app $HEROKU_APP_NAME
+    /bin/sh -c 'if [ -f ./push_heroku_$TRAVIS_CPU_ARCH.sh ]; then eval ./push_heroku_$TRAVIS_CPU_ARCH.sh ; fi'
   on:
     branch: master
