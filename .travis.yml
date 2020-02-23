@@ -20,14 +20,13 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - echo "$HEROKU_USERNAME "| docker login --username=$HEROKU_USERNAME  --password=$HEROKU_API_KEY registry.heroku.com
 script:
-  -  docker build -t gabrielbo1/iroko:${TAG} .
-  -  docker tag gabrielbo1/iroko registry.heroku.com/$HEROKU_APP_NAME/web
+  - /bin/sh -c './build/build.sh'
+  - /bin/sh -c 'if [ -f ./build/build_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/build_$TRAVIS_CPU_ARCH.sh ; fi'
 deploy:
   provider: script
   script:
     # push to dockerhub & heroku
-    docker push gabrielbo1/iroko;
-    docker push registry.heroku.com/$HEROKU_APP_NAME/web;
-    heroku container:release web --app $HEROKU_APP_NAME
+    - docker push gabrielbo1/iroko;
+    - /bin/sh -c 'if [ -f ./build/push_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/push_$TRAVIS_CPU_ARCH.sh ; fi'
   on:
     branch: master
