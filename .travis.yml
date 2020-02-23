@@ -26,7 +26,7 @@ deploy:
   provider: script
   script:
     # push to dockerhub & heroku
-    - docker push gabrielbo1/iroko-$TRAVIS_CPU_ARCH:${TAG};
+    - docker push gabrielbo1/iroko:${TAG}-$TRAVIS_CPU_ARCH;
     - /bin/sh -c 'if [ -f ./build/push_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/push_$TRAVIS_CPU_ARCH.sh ; fi'
   on:
     branch: master
