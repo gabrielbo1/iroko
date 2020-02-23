@@ -13,12 +13,6 @@ sudo: required
 
 services:
   - docker
-
-addons:
-  apt:
-    packages:
-      - docker-ce
-
 before_install:
   # install heroku CLI
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
@@ -26,6 +20,7 @@ before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - echo "$HEROKU_USERNAME "| docker login --username=$HEROKU_USERNAME  --password=$HEROKU_API_KEY registry.heroku.com
 script:
+  -  docker run --rm --privileged multiarch/qemu-user-static:register
   -  docker build -t gabrielbo1/iroko:${TAG} .
   -  docker tag gabrielbo1/iroko registry.heroku.com/$HEROKU_APP_NAME/web
 deploy:
