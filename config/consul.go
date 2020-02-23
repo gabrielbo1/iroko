@@ -25,6 +25,8 @@ const (
 // standard environment settings.
 func ConsulStart(doneChan chan struct{}) {
 	if EnvironmentVariableValue(ConsulActive) == "true" {
+		time.Sleep(time.Second * 10)
+
 		// build client
 		client, err := api.NewClient(&api.Config{
 			Address: EnvironmentVariableValue(ConsulAddress) + ":" + EnvironmentVariableValue(ConsulPort),
@@ -35,7 +37,7 @@ func ConsulStart(doneChan chan struct{}) {
 			panic(err)
 		}
 
-		address := "http://" + EnvironmentVariableValue(AddressInstance)
+		address := EnvironmentVariableValue(AddressInstance)
 
 		//Random port with Consul
 		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
@@ -52,7 +54,7 @@ func ConsulStart(doneChan chan struct{}) {
 			Name:    "iroko", // Can be service type
 			Tags:    []string{"iroko"},
 			Check: &api.AgentServiceCheck{
-				HTTP:     address + ":" + strconv.Itoa(port) + "/_health",
+				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
 				Interval: "60s",
 			},
 		})
