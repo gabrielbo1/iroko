@@ -2,7 +2,6 @@ module github.com/gabrielbo1/iroko
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/consul/api v1.1.0
 	github.com/hashicorp/go-msgpack v0.5.5 // indirect
