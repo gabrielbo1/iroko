@@ -19,6 +19,9 @@ const (
 	TTLDeregisterCriticalServiceAfter = time.Minute
 )
 
+var consulActive bool = false
+var client *api.Client
+
 // ConsulStart - Checks if the Consul is enabled.
 // If you are registering for a service at the
 // consul following the past settings or with the
@@ -26,7 +29,7 @@ const (
 func ConsulStart(doneChan chan struct{}) {
 	if EnvironmentVariableValue(ConsulActive) == "true" {
 		// build client
-		client, err := api.NewClient(&api.Config{
+		c, err := api.NewClient(&api.Config{
 			Address: EnvironmentVariableValue(ConsulAddress) + ":" + EnvironmentVariableValue(ConsulPort),
 			Scheme:  "http",
 		})
@@ -34,6 +37,7 @@ func ConsulStart(doneChan chan struct{}) {
 		if err != nil {
 			panic(err)
 		}
+		client = c
 
 		address := "http://" + EnvironmentVariableValue(AddressInstance)
 
@@ -49,8 +53,8 @@ func ConsulStart(doneChan chan struct{}) {
 			Address: address,
 			Port:    port,
 			ID:      id,      // Unique for each node
-			Name:    "iroko", // Can be service type
-			Tags:    []string{"iroko"},
+			Name:    EnvironmentVariableValue(AppName), // Can be service type
+			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
 				HTTP:     address + ":" + strconv.Itoa(port) + "/_health",
 				Interval: "60s",
@@ -93,6 +97,41 @@ func ConsulStart(doneChan chan struct{}) {
 			)
 		}()
 
+		consulActive = true
 		log.Printf("Consul Active = %v.", isLeader)
 	}
+}
+
+// ConsulOk - True case consul OK.
+func ConsulOk() bool {
+	return consulActive
+}
+
+// ConsulVariable - Especific type consul
+// key variables.
+type ConsulVariable string
+
+const (
+	JwtKey ConsulVariable = "IROKO_JWT_KEY"
+)
+
+// PutConsulVariable - Put simple variabe in Consul.
+func PutConsulVariable(variable ConsulVariable, value string) error {
+	var keyPair *api.KVPair = &api.KVPair{}
+	keyPair.Key = string(variable)
+	keyPair.Value = []byte(value)
+
+	if _, e := client.KV().Put(keyPair, nil); e != nil {
+		return e
+	}
+	return nil
+}
+
+// GetConsulVariable - Retrieves simple consul variable.
+func GetConsulVariable(variable ConsulVariable) (string, error) {
+	kp, _, err := client.KV().Get(string(variable), nil)
+	if err != nil {
+		return "", err
+	}
+	return string(kp.Value), nil
 }
