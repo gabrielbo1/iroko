@@ -27,7 +27,7 @@ RUN npm run ng build -- --prod --output-path=dist
 FROM alpine:3.10.3
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/public/
-COPY  --from=builderweb /iroko-app/dist/iroko-app .
+COPY  --from=builderweb /website/iroko-app/dist/iroko-app .
 WORKDIR /root/
 COPY --from=builder /app/main .
 ENV TZ=America/Sao_Paulo
