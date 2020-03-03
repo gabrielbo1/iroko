@@ -12,6 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 #BUILD WEB
 FROM node:10-alpine as builderweb
+RUN npm audit fix --force
 
 # Saving libraries to different layers avoids unnecessary downloads.
 COPY /website/iroko-app/package.json ./
