@@ -1,2 +1,3 @@
 exclude_paths:
   - 'website/iroko-app/*.js'
+  - 'website/iroko-app/e2e/*.*'
