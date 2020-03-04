@@ -11,15 +11,17 @@ WORKDIR /app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 #BUILD WEB
-FROM node:10-alpine as builderweb
+FROM node:13.8.0-alpine3.11 as builderweb
 
+#Phyton
+RUN apk add --update nodejs bash python make g++ git
+RUN python --version
 
 # Saving libraries to different layers avoids unnecessary downloads.
 COPY /website/iroko-app/package.json ./
 COPY /website/iroko-app/package-lock.json ./
-RUN npm ci && mkdir /iroko-app && mv ./node_modules ./iroko-app
+RUN npm ci -f && mkdir /iroko-app && mv ./node_modules ./iroko-app
 WORKDIR /iroko-app
-RUN npm audit fix --force
 COPY /website/iroko-app/ .
 
 #Build Web
