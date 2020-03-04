@@ -126,3 +126,4 @@ modules.xml
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+/.vscode/

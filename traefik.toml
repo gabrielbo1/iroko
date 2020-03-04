@@ -11,46 +11,18 @@ logLevel = "DEBUG"
     [entryPoints.http]
     address = ":80"
 
-[file]
- watch = true
-
-[backends]
-  [backends.irokobackend]
-    [backends.irokobackend.servers.server1]
-    url = "http://iroko.localhost"
-    passHostHeader = true
-    weight = 10
-
-[frontends]
- [frontends.irokofront]
- backend = "irokobackend"
- entryPoints = ["http"]
-   [frontends.irokofront.routes.api1]
-   rule = "Host:app.localhost"
-
 ################################################################
 # API and dashboard configuration
 ################################################################
-# Enable web configuration backend
 [api]
+    entryPoint = "traefik"
     dashboard = true
-    # Enable more detailed statistics.
-    [api.statistics]
-    # Number of recent errors logged.
-    #
-    # Default: 10
-    #
-    recentErrors = 100
-################################################################
-# Consul
-################################################################
-endpoint = "consul:8500"
-watch = true
-prefix = "traefik"
 
 ################################################################
 # Consul Catalog
 ################################################################
 [consulCatalog]
-endpoint = "consul:8500"
+endpoint = "127.0.0.1:8500"
+exposedByDefault = false
+prefix = "traefik"
 domain = "localhost"

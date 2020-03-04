@@ -13,6 +13,10 @@ import (
 type EnvironmentVariable string
 
 const (
+	//AppName - App define continaier image name and PathPrefix to API URLs.
+	AppName EnvironmentVariable = "APP_NAME"
+	//HealthCheckPath - Health Chech Path.
+	HealthCheckPath EnvironmentVariable = "HEALTH_CHECH_PATH"
 	// Port -  Server port application.
 	Port EnvironmentVariable = "PORT"
 	// ConsulActive - Case true subscribe consul.
@@ -33,6 +37,8 @@ const (
 	AddressInstance = "ADDRESS_INSTANCE"
 	// RandomFreePort - free PORT.
 	RandomFreePort = "RandomFreePort"
+	// Domain - DNS application or IP.
+	Domain = "DOMAIN"
 )
 
 func getVariable(name EnvironmentVariable, defaultValue string) string {
@@ -46,6 +52,10 @@ func getVariable(name EnvironmentVariable, defaultValue string) string {
 // or return default value of variable.
 func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	switch variable {
+	case AppName:
+		return getVariable(AppName, "iroko")
+	case HealthCheckPath:
+		return getVariable(HealthCheckPath, "/_health")
 	case Port:
 		return getVariable(Port, "7070")
 	case ConsulActive:
@@ -63,9 +73,6 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	case PostgresPassword:
 		return getVariable(PostgresPassword, "123456")
 	case AddressInstance:
-		if a := getVariable(AddressInstance, ""); a != "" {
-			return a
-		}
 		addrs, err := net.InterfaceAddrs()
 		if err != nil {
 			panic(err)
@@ -81,6 +88,8 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	case RandomFreePort:
 		rand.Seed(time.Now().UnixNano())
 		return strconv.Itoa(rand.Intn(20000-10000) + 10000)
+	case Domain:
+		return getVariable(Domain, "localhost")
 	}
 	return ""
 }

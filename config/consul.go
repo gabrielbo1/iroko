@@ -1,23 +1,15 @@
 package config
 
 import (
+	"github.com/hashicorp/consul/api"
+	uuid "github.com/hashicorp/go-uuid"
 	"log"
 	"os"
 	"strconv"
-	"time"
-
-	"github.com/hashicorp/consul/api"
-	uuid "github.com/hashicorp/go-uuid"
 )
 
-const (
-	// TTLInterval - .
-	TTLInterval = time.Second * 15
-	// TTLRefreshInterval - .
-	TTLRefreshInterval = time.Second * 10
-	// TTLDeregisterCriticalServiceAfter - .
-	TTLDeregisterCriticalServiceAfter = time.Minute
-)
+var consulActive bool
+var client *api.Client
 
 // ConsulStart - Checks if the Consul is enabled.
 // If you are registering for a service at the
@@ -25,10 +17,8 @@ const (
 // standard environment settings.
 func ConsulStart(doneChan chan struct{}) {
 	if EnvironmentVariableValue(ConsulActive) == "true" {
-		time.Sleep(time.Second * 10)
-
 		// build client
-		client, err := api.NewClient(&api.Config{
+		c, err := api.NewClient(&api.Config{
 			Address: EnvironmentVariableValue(ConsulAddress) + ":" + EnvironmentVariableValue(ConsulPort),
 			Scheme:  "http",
 		})
@@ -36,12 +26,16 @@ func ConsulStart(doneChan chan struct{}) {
 		if err != nil {
 			panic(err)
 		}
+		client = c
 
-		address := EnvironmentVariableValue(AddressInstance)
+		address := "http://" + EnvironmentVariableValue(AddressInstance)
 
 		//Random port with Consul
 		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
-		os.Setenv(string(Port), strconv.Itoa(port))
+		err = os.Setenv(string(Port), strconv.Itoa(port))
+		if err != nil {
+			panic(err)
+		}
 		log.Printf("Random port application = %v", port)
 
 		// Unic ID application.
@@ -50,11 +44,11 @@ func ConsulStart(doneChan chan struct{}) {
 		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
 			Port:    port,
-			ID:      id,      // Unique for each node
-			Name:    "iroko", // Can be service type
-			Tags:    []string{"iroko"},
+			ID:      id,                                // Unique for each node
+			Name:    EnvironmentVariableValue(AppName), // Can be service type
+			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
-				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
+				HTTP:     address + ":" + strconv.Itoa(port) + "/_health",
 				Interval: "60s",
 			},
 		})
@@ -95,6 +89,42 @@ func ConsulStart(doneChan chan struct{}) {
 			)
 		}()
 
+		consulActive = true
 		log.Printf("Consul Active = %v.", isLeader)
 	}
+}
+
+// ConsulOk - True case consul OK.
+func ConsulOk() bool {
+	return consulActive
+}
+
+// ConsulVariable - Especific type consul
+// key variables.
+type ConsulVariable string
+
+const (
+	//JwtKey - The signing key JWT shares with other instances of iroko (Gateway Pattern).
+	JwtKey ConsulVariable = "IROKO_JWT_KEY"
+)
+
+// PutConsulVariable - Put simple variabe in Consul.
+func PutConsulVariable(variable ConsulVariable, value string) error {
+	var keyPair *api.KVPair = &api.KVPair{}
+	keyPair.Key = string(variable)
+	keyPair.Value = []byte(value)
+
+	if _, e := client.KV().Put(keyPair, nil); e != nil {
+		return e
+	}
+	return nil
+}
+
+// GetConsulVariable - Retrieves simple consul variable.
+func GetConsulVariable(variable ConsulVariable) (string, error) {
+	kp, _, err := client.KV().Get(string(variable), nil)
+	if err != nil {
+		return "", err
+	}
+	return string(kp.Value), nil
 }

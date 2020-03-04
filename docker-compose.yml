@@ -1,12 +1,5 @@
 version: '3.4'
 
-networks:
-  irokonetwork:
-
-x-default-config: &defaultconf
-  networks:
-    - irokonetwork
-
 services:
   #TRAEFICK E CONSUL
   consul:
@@ -14,7 +7,8 @@ services:
     command: consul agent -server -dev -client=0.0.0.0 -ui -bootstrap -log-level warn
     ports:
      - "8500:8500"
-    <<: *defaultconf
+    networks:
+      - irokonetwork
   
   reverse-proxy:
     image: traefik:v1.7-alpine
@@ -25,15 +19,10 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.toml:/etc/traefik/traefik.toml:rw
-    <<: *defaultconf
+    networks:
+      - irokonetwork
 
+networks:
+  irokonetwork:
 
-  iroko:
-    image: gabrielbo1/iroko:latest
-    environment:
-      - TZ=GMT-3
-      - CONSUL_ACTIVE=true
-      - CONSUL_ADDRESS=consul
-    <<: *defaultconf
 
