@@ -14,6 +14,7 @@ sudo: required
 services:
   - docker
 before_install:
+  - docker system prune -a
   # install heroku CLI
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh
   # login to docker registries (dockerhub + heroku)
