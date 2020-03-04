@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
+//Route - Defines structure for mapping the routes that will be mapped by gorilla.
 type Route struct {
 	Name        string
 	Method      string
@@ -11,6 +12,7 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
+// Routes - Array with all mapped APIs.
 type Routes []Route
 
 var routes = Routes{
@@ -33,4 +35,3 @@ var routes = Routes{
 		HandlerFunc: Test,
 	},
 }
-

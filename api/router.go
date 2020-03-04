@@ -51,7 +51,7 @@ func authenticateHandler(inner http.Handler) http.Handler {
 	})
 }
 
-// Create a struct that will be encoded to a JWT.
+// Claims Create a struct that will be encoded to a JWT.
 // We add jwt.StandardClaims as an embedded type, to provide fields like expiry time
 type Claims struct {
 	Username string   `json:"username"`
@@ -161,7 +161,7 @@ func validUser(username, passowrd string) (bool, []string) {
 		[]string{config.EnvironmentVariableValue(config.AppName)}
 }
 
-var signKey string = ""
+var signKey string
 
 func getJwtSingKey() []byte {
 	if signKey == "" {

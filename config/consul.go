@@ -1,25 +1,14 @@
 package config
 
 import (
+	"github.com/hashicorp/consul/api"
+	uuid "github.com/hashicorp/go-uuid"
 	"log"
 	"os"
 	"strconv"
-	"time"
-
-	"github.com/hashicorp/consul/api"
-	uuid "github.com/hashicorp/go-uuid"
 )
 
-const (
-	// TTLInterval - .
-	TTLInterval = time.Second * 15
-	// TTLRefreshInterval - .
-	TTLRefreshInterval = time.Second * 10
-	// TTLDeregisterCriticalServiceAfter - .
-	TTLDeregisterCriticalServiceAfter = time.Minute
-)
-
-var consulActive bool = false
+var consulActive bool
 var client *api.Client
 
 // ConsulStart - Checks if the Consul is enabled.
@@ -43,7 +32,10 @@ func ConsulStart(doneChan chan struct{}) {
 
 		//Random port with Consul
 		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
-		os.Setenv(string(Port), strconv.Itoa(port))
+		err = os.Setenv(string(Port), strconv.Itoa(port))
+		if err != nil {
+			panic(err)
+		}
 		log.Printf("Random port application = %v", port)
 
 		// Unic ID application.
@@ -52,7 +44,7 @@ func ConsulStart(doneChan chan struct{}) {
 		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
 			Port:    port,
-			ID:      id,      // Unique for each node
+			ID:      id,                                // Unique for each node
 			Name:    EnvironmentVariableValue(AppName), // Can be service type
 			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
@@ -112,6 +104,7 @@ func ConsulOk() bool {
 type ConsulVariable string
 
 const (
+	//JwtKey - The signing key JWT shares with other instances of iroko (Gateway Pattern).
 	JwtKey ConsulVariable = "IROKO_JWT_KEY"
 )
 

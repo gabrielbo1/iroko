@@ -15,7 +15,7 @@ type EnvironmentVariable string
 const (
 	//AppName - App define continaier image name and PathPrefix to API URLs.
 	AppName EnvironmentVariable = "APP_NAME"
-	//Health Chech Path
+	//HealthCheckPath - Health Chech Path.
 	HealthCheckPath EnvironmentVariable = "HEALTH_CHECH_PATH"
 	// Port -  Server port application.
 	Port EnvironmentVariable = "PORT"
@@ -37,7 +37,7 @@ const (
 	AddressInstance = "ADDRESS_INSTANCE"
 	// RandomFreePort - free PORT.
 	RandomFreePort = "RandomFreePort"
-	// Domain aplication
+	// Domain - DNS application or IP.
 	Domain = "DOMAIN"
 )
 

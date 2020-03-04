@@ -4,7 +4,8 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 )
-// Author: Matt Silverlock
+
+// GenerateRandomBytes Author: Matt Silverlock
 // Url: https://blog.questionable.services/article/generating-secure-random-numbers-crypto-rand/
 // GenerateRandomBytes returns securely generated random bytes.
 // It will return an error if the system's secure random
@@ -21,7 +22,7 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 	return b, nil
 }
 
-// Author: Matt Silverlock
+// GenerateRandomString Author: Matt Silverlock
 // Url: https://blog.questionable.services/article/generating-secure-random-numbers-crypto-rand/
 // GenerateRandomString returns a URL-safe, base64 encoded
 // securely generated random string.
