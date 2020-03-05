@@ -36,4 +36,5 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN chmod a+x main
 CMD ["./main"]
