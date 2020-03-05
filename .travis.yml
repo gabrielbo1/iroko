@@ -29,6 +29,5 @@ deploy:
   script:
     # push to dockerhub & heroku
     - /bin/sh -c './build/push.sh'
-    - /bin/sh -c 'if [ -f ./build/push_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/push_$TRAVIS_CPU_ARCH.sh ; fi'
   on:
     branch: master
