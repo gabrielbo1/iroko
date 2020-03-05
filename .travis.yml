@@ -22,13 +22,11 @@ before_install:
   - echo "$HEROKU_USERNAME "| docker login --username=$HEROKU_USERNAME  --password=$HEROKU_API_KEY registry.heroku.com
 script:
   - /bin/sh -c './build/build.sh'
-  - /bin/sh -c 'if [ -f ./build/build_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/build_$TRAVIS_CPU_ARCH.sh ; fi'
 deploy:
   skip_cleanup: true
   provider: script
   script:
     # push to dockerhub & heroku
     - /bin/sh -c './build/push.sh'
-    - /bin/sh -c 'if [ -f ./build/push_$TRAVIS_CPU_ARCH.sh ]; then eval ./build/push_$TRAVIS_CPU_ARCH.sh ; fi'
   on:
     branch: master
