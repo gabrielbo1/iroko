@@ -1,0 +1,35 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-form-field {
+  width: 100%;
+  min-width: 300px;
+}
+
+mat-card-title, mat-card-content {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+button {
+  width: 100%;
+}
+
+.error {
+  padding: 16px;
+  width: 300px;
+  color: white;
+  background-color: red;
+}
+
+.menu-app-image {
+  background-image: url('../../assets/icons/android-icon-192x192.png');
+  background-size: cover;
+}
