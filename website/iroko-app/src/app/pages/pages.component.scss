@@ -1,0 +1,54 @@
+.main {
+  background-color: #fff;
+}
+
+.drawer {
+  position: fixed;
+  height: 100vh;
+  min-width: 25%;
+  border-right: 1px solid #ccc;
+}
+.drawer .header {
+  justify-content: space-between;
+}
+
+.drawer .submenu {
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.drawer .contents {
+  padding: 16px;
+  max-width: 40%;
+  background-color: white;
+}
+
+.font-header-menu {
+  font-weight: bold;
+}
+
+.main.contents {
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.main.footer {
+  position: fixed;
+  border-top: 1px solid #ccc;
+  bottom: 0;
+  width: 100%;
+}
+
+.menu-app-image {
+  background-image: url('../../assets/icons/android-icon-96x96.png');
+  background-size: cover;
+  min-width: 50px;
+  min-height: 50px;
+  border-radius: 50%;
+}
+
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
