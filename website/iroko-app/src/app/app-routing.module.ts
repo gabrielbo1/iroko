@@ -9,7 +9,7 @@ const routes: Routes = [
     path:'login', component: LoginComponent
   },
   {
-    path: 'pages', loadChildren: 'src/app/pages/pages.module#PagesModule',
+    path: 'pages', loadChildren: () => import('src/app/pages/pages.module').then(m => m.PagesModule),
     canActivate: [AuthenticateService]
   },
   {
