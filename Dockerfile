@@ -20,7 +20,8 @@ RUN python --version
 # Saving libraries to different layers avoids unnecessary downloads.
 COPY /website/iroko-app/package.json ./
 COPY /website/iroko-app/package-lock.json ./
-RUN npm ci -f && mkdir /iroko-app && mv ./node_modules ./iroko-app
+RUN npm install --cache /tmp/empty-Fcache
+RUN npm ci && mkdir /iroko-app && mv ./node_modules ./iroko-app
 WORKDIR /iroko-app
 COPY /website/iroko-app/ .
 
