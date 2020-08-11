@@ -1,2 +1,8 @@
 hello_word="Hello Word. Mensagem de teste."
 hello_word_param="Hello Word. Mensagem de teste {{.Name}}."
+login10="Login de usuário vazio, inválido para cadastro."
+login20="Senha de usuário vazio, inválido para cadastro."
+logincompany10="Login de usuário vazio, inválido para cadastro."
+logincompany20="Senha de usuário vazio, inválido para cadastro."
+logincompany30="Companhia associada ao login, inválida."
+company10="Nome companhia vazia, inválida para cadastro."

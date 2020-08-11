@@ -19,45 +19,46 @@ func NewErr() *Err {
 }
 
 //WithCode - Set Code.
-func (err *Err) WithCode(code string) *Err {
-	err.code = code
-	return err
+func (e *Err) WithCode(code string) *Err {
+	e.code = code
+	return e
 }
 
 //GetCode - Code internationalization message.
-func (err *Err) GetCode() string {
-	return err.code
+func (e *Err) GetCode() string {
+	return e.code
 }
 
 //WithMessage - Set Message.
-func (err *Err) WithMessage(msg string) *Err {
-	err.message = msg
-	return err
+func (e *Err) WithMessage(msg string) *Err {
+	e.message = msg
+	return e
 }
 
 //WithError - Set Err.
-func (err *Err) WithError(error error) *Err {
-	err.err = error
-	return err
+func (e *Err) WithError(error error) *Err {
+	e.err = error
+	return e
 }
 
 //WithMsgParam - Set params.
-func (err *Err) WithMsgParam(param map[string]string) *Err {
-	err.msgParam = param
-	return err
+func (e *Err) WithMsgParam(param map[string]string) *Err {
+	e.msgParam = param
+	return e
 }
 
 //GetMsgParam - Return msg params.
-func (err *Err) GetMsgParam() map[string]string {
-	return err.msgParam
+func (e *Err) GetMsgParam() map[string]string {
+	return e.msgParam
 }
 
-func (err *Err) WithErr(e *Err) *Err {
-	err.code = e.code
-	err.message = e.message
-	err.msgParam = e.msgParam
-	err.err = e.err
-	return err
+//WithErr - Build Err  with Err.
+func (e *Err) WithErr(k *Err) *Err {
+	e.code = k.code
+	e.message = k.message
+	e.msgParam = k.msgParam
+	e.err = k.err
+	return e
 }
 
 //OnError - Convert Err type to error type.

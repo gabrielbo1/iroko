@@ -1,2 +1,8 @@
 hello_word="Hello Word. Test message."
 hello_word_param="Hello Word. Test message {{.Name}}."
+login10="Empty user login, invalid for registration."
+login20="Empty user password, invalid for registration."
+logincompany10="Empty user login, invalid for registration."
+logincompany20="Empty user password, invalid for registration."
+logincompany30="Company associated with login, invalid."
+company10="Empty company name, invalid for registration."
