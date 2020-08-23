@@ -7,6 +7,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
+#TEST AND COVERAGE
+RUN go test ./... -cover
+
 # Fim Testes Inicio BUILD.
 WORKDIR /app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .

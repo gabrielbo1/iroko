@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/gabrielbo1/iroko/infrasctructure/repository"
 	"math/rand"
 	"net"
 	"os"
@@ -25,14 +26,20 @@ const (
 	ConsulAddress = "CONSUL_ADDRESS"
 	// ConsulPort - Consul subscribe port.
 	ConsulPort = "CONSUL_PORT"
-	// PostgresAddress - PostgreSQL IP  address or DNS.
-	PostgresAddress = "POSTGRES_ADDRESS"
-	// PostgresPort - PostgreSQL port.
-	PostgresPort = "POSTGRES_PORT"
-	// PostgresUser - PostgreSQL user.
-	PostgresUser = "POSTGRES_USER"
-	// PostgresPassword - PostgreSQL user.
-	PostgresPassword = "POSTGRES_PASSWORD"
+	//Base - Define data base app. Ex.: POSTGRESQL
+	Base EnvironmentVariable = "BASE"
+	//BaseName - Define base name.
+	BaseName EnvironmentVariable = "BASE_NAME"
+	// BaseAddress - Data base IP address or DNS.
+	BaseAddress = "BASE_ADDRESS"
+	// BasePort - Data base port.
+	BasePort = "BASE_PORT"
+	// BaseUser - User data base user.
+	BaseUser = "BASE_USER"
+	// BasePassword - Data base password.
+	BasePassword = "BASE_PASSWORD"
+	// BaseSSL - Data base SSL mode(View PostgreSQL ssl configuration).
+	BaseSSL = "BASE_SSL"
 	// AddressInstance - Ip application.
 	AddressInstance = "ADDRESS_INSTANCE"
 	// RandomFreePort - free PORT.
@@ -64,14 +71,20 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 		return getVariable(ConsulAddress, "127.0.0.1")
 	case ConsulPort:
 		return getVariable(ConsulPort, "8500")
-	case PostgresAddress:
-		return getVariable(PostgresAddress, "127.0.0.1")
-	case PostgresPort:
-		return getVariable(PostgresPort, "5432")
-	case PostgresUser:
-		return getVariable(PostgresUser, "postgres")
-	case PostgresPassword:
-		return getVariable(PostgresPassword, "123456")
+	case Base:
+		return getVariable(Base, string(repository.PostgreSQL))
+	case BaseName:
+		return getVariable(BaseName, "iroko")
+	case BaseAddress:
+		return getVariable(BaseAddress, "127.0.0.1")
+	case BasePort:
+		return getVariable(BasePort, "5432")
+	case BaseUser:
+		return getVariable(BaseUser, "postgres")
+	case BasePassword:
+		return getVariable(BasePassword, "123456")
+	case BaseSSL:
+		return getVariable(BaseSSL, "disable")
 	case AddressInstance:
 		addrs, err := net.InterfaceAddrs()
 		if err != nil {

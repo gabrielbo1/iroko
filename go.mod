@@ -8,6 +8,7 @@ require (
 	github.com/hashicorp/go-msgpack v0.5.5 // indirect
 	github.com/hashicorp/go-uuid v1.0.1
 	github.com/hashicorp/memberlist v0.1.4 // indirect
+	github.com/lib/pq v1.2.0
 	github.com/nicksnyder/go-i18n/v2 v2.0.3
 	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.4.2

@@ -19,6 +19,10 @@ func TestValidLogin(t *testing.T) {
 	login.Password = ""
 	assertValidLogin(login, t, "login20")
 	login.Password = "pass"
+	assertValidLogin(login, t, "login30")
+	login.Email = "Simple Text"
+	assertValidLogin(login, t, "login30")
+	login.Email = "barbosa.olivera1@gmail.com"
 
 	if log, err := ValidLogin(login); log == nil || err != nil {
 		t.Error("Error valid entity login")
