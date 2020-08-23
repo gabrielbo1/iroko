@@ -23,8 +23,12 @@ func TestValidLoginCompany(t *testing.T) {
 	loginCmp.Company = Company{}
 	assertValidLoginCompany(loginCmp, t, "logincompany30")
 	loginCmp.Company.ID = 1
+	assertValidLoginCompany(loginCmp, t, "logincompany40")
+	loginCmp.Email = "Simple Text"
+	assertValidLoginCompany(loginCmp, t, "logincompany40")
+	loginCmp.Email = "barbosa.olivera1@gmail.com"
 
 	if log, err := ValidLoginCompany(loginCmp); log == nil || err != nil {
-		t.Error("Error valid entity login company")
+		t.Error("Error valid entity login company: " + err.message)
 	}
 }

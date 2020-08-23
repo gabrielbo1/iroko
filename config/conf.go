@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"github.com/gabrielbo1/iroko/infrasctructure/repository"
 	"math/rand"
 	"net"
 	"os"
@@ -72,7 +71,7 @@ func EnvironmentVariableValue(variable EnvironmentVariable) string {
 	case ConsulPort:
 		return getVariable(ConsulPort, "8500")
 	case Base:
-		return getVariable(Base, string(repository.PostgreSQL))
+		return getVariable(Base, "POSTGRESQL")
 	case BaseName:
 		return getVariable(BaseName, "iroko")
 	case BaseAddress:
