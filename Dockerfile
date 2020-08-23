@@ -6,7 +6,7 @@ RUN go get -u github.com/nicksnyder/go-i18n/v2/goi18n
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-login_company_test
+
 #TEST AND COVERAGE
 RUN go test ./... -cover
 
