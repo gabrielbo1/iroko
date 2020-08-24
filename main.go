@@ -1,9 +1,11 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gabrielbo1/iroko/api"
 	"github.com/gabrielbo1/iroko/config"
+	"github.com/lib/pq"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
@@ -12,6 +14,9 @@ import (
 )
 
 func init() {
+	//Register supported drivers sql data bases.
+	sql.Register("postgres", &pq.Driver{})
+
 	// Only log the warning severity or above.
 	log.SetLevel(log.FatalLevel)
 }

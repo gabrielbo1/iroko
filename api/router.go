@@ -138,17 +138,12 @@ func getTokenAndValid(w http.ResponseWriter, r *http.Request) (*jwt.Token, *Clai
 		return signingKey, nil
 	})
 
-	if err != nil {
-		if err.Error() == jwt.ErrSignatureInvalid.Error() {
+	if err != nil || !token.Valid {
+		if (err != nil && err.Error() == jwt.ErrSignatureInvalid.Error()) || !token.Valid {
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return nil, nil, false
+		} else {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		}
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return nil, nil, false
-	}
-
-	if !token.Valid {
-		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return nil, nil, false
 	}
 
