@@ -5,8 +5,14 @@ import (
 	"github.com/gabrielbo1/iroko/config"
 	"github.com/gabrielbo1/iroko/domain"
 	"github.com/gabrielbo1/iroko/domain/permission"
-	"github.com/gabrielbo1/iroko/infrasctructure/repository/postgres"
+	"github.com/gabrielbo1/iroko/infrastructure/repository/postgres"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database"
+	migPostgres "github.com/golang-migrate/migrate/v4/database/postgres"
+	"github.com/golang-migrate/migrate/v4/source"
+	"github.com/golang-migrate/migrate/v4/source/file"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 //DataBase - Defines the type of the constant to
@@ -22,6 +28,25 @@ var DB *sql.DB
 //dataBase - Current data base application.
 var dataBase *DataBase
 
+func init() {
+	var k DataBase = "NO_DATABASE"
+	dataBase = &k
+}
+
+func getDataBase() *DataBase {
+	if dataBase == nil {
+		switch config.EnvironmentVariableValue(config.Base) {
+		case string(PostgreSQL):
+			var dt DataBase = PostgreSQL
+			dataBase = &dt
+			break
+		default:
+			log.Fatal("Invalid data base configuration.")
+		}
+	}
+	return dataBase
+}
+
 //urlPostgresConnection - Url PostgreSQL driver
 func urlPostgresConnection() string {
 	connString := "host=" + config.EnvironmentVariableValue(config.BaseAddress)
@@ -29,7 +54,45 @@ func urlPostgresConnection() string {
 	connString += " dbname=" + config.EnvironmentVariableValue(config.BaseName)
 	connString += " password='" + config.EnvironmentVariableValue(config.BasePassword) + "'"
 	connString += " sslmode=" + config.EnvironmentVariableValue(config.BaseSSL)
-	return ""
+	return connString
+}
+
+//MigrationInit - Migration execute.
+func MigrationInit() {
+	var migrator *migrate.Migrate
+	var err error
+	var errDomain *domain.Err
+	var sourceDriver source.Driver
+	var dbInstance database.Driver
+
+	if DB, errDomain = FindConnection(); errDomain != nil {
+		log.Fatal(errDomain)
+	}
+
+	switch DataBase(*getDataBase()) {
+	case PostgreSQL:
+		f := &file.File{}
+		if sourceDriver, err = f.Open("file://" + "./infrastructure/repository/postgres/migration"); err != nil {
+			log.Fatal(err)
+		}
+
+		if dbInstance, err = migPostgres.WithInstance(DB, &migPostgres.Config{}); err != nil {
+			log.Fatal(err)
+		}
+
+		if migrator, err = migrate.NewWithInstance(
+			"file",
+			sourceDriver,
+			config.EnvironmentVariableValue(config.BaseName),
+			dbInstance); err != nil {
+			log.Fatal(err)
+		}
+
+		if err = migrator.Up(); err != nil && !strings.Contains(err.Error(), "no change") {
+			log.Fatal(err)
+		}
+		break
+	}
 }
 
 //FindConnection - Find for connection to the database
