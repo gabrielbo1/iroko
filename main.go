@@ -1,11 +1,10 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/gabrielbo1/iroko/api"
 	"github.com/gabrielbo1/iroko/config"
-	"github.com/lib/pq"
+	"github.com/gabrielbo1/iroko/infrastructure/repository"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
@@ -14,11 +13,11 @@ import (
 )
 
 func init() {
-	//Register supported drivers sql data bases.
-	sql.Register("postgres", &pq.Driver{})
-
 	// Only log the warning severity or above.
 	log.SetLevel(log.FatalLevel)
+
+	//Flag parsing
+	config.FlagParse()
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +25,8 @@ func health(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	//Start migration.
+	repository.MigrationInit()
 
 	doneChan := make(chan struct{})
 	defer close(doneChan)

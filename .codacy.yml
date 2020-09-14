@@ -1,3 +1,6 @@
 exclude_paths:
   - 'website/iroko-app/*.js'
+  - 'website/iroko-app/*.ts'
+  - 'website/iroko-app/*.css'
+  - 'website/iroko-app/*.scss'
   - 'website/iroko-app/e2e/*.*'
