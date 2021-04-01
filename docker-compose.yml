@@ -3,7 +3,7 @@ version: '3.4'
 services:
   #TRAEFICK E CONSUL
   consul:
-    image: consul:1.5.3
+    image: consul:1.8.9
     command: consul agent -server -dev -client=0.0.0.0 -ui -bootstrap -log-level warn
     ports:
      - "8500:8500"
@@ -11,7 +11,7 @@ services:
       - irokonetwork
   
   reverse-proxy:
-    image: traefik:v1.7-alpine
+    image: traefik:v1.7.29-alpine
     command: traefik --consulcatalog.endpoint=consul:8500 --api=true --docker
     ports:
       - 80:80
