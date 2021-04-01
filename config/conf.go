@@ -104,7 +104,7 @@ func setAddressInstance(envVar EnvironmentVariable) {
 				}
 			}
 		}
-		panic(fmt.Errorf("Impossible to determinate IP Address"))
+		panic(fmt.Errorf("%s", "Impossible to determinate IP Address"))
 	}
 }
 
