@@ -1,11 +1,12 @@
 package config
 
 import (
-	"github.com/hashicorp/consul/api"
-	uuid "github.com/hashicorp/go-uuid"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/hashicorp/consul/api"
+	uuid "github.com/hashicorp/go-uuid"
 )
 
 var consulActive bool
@@ -28,7 +29,7 @@ func ConsulStart(doneChan chan struct{}) {
 		}
 		client = c
 
-		address := "http://" + EnvironmentVariableValue(AddressInstance)
+		address := EnvironmentVariableValue(AddressInstance)
 
 		//Random port with Consul
 		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
@@ -48,8 +49,8 @@ func ConsulStart(doneChan chan struct{}) {
 			Name:    EnvironmentVariableValue(AppName), // Can be service type
 			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
-				HTTP:     address + ":" + strconv.Itoa(port) + "/_health",
-				Interval: "60s",
+				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
+				Interval: "10s",
 			},
 		})
 

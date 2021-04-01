@@ -59,7 +59,8 @@ var configVars []confiVar = []confiVar{
 	{name: HealthCheckPath, value: "/_health", usage: "Health Chech Path."},
 	{name: Port, value: "7070", usage: "Server port application."},
 	{name: ConsulActive, value: "false", usage: "Case true subscribe consul. Ex.: false"},
-	{name: ConsulPort, value: "127.0.0.1", usage: "Consul IP address or DNS. Ex.: 127.0.0.1"},
+	{name: ConsulAddress, value: "127.0.0.1", usage: "Consul IP address or DNS. Ex.: 127.0.0.1"},
+	{name: ConsulPort, value: "8500", usage: "Consul default port. Ex.: 8500"},
 	{name: Base, value: "POSTGRESQL", usage: "Define data base app. Ex.: POSTGRESQL"},
 	{name: BaseName, value: "iroko", usage: "Define base name. Ex.: iroko"},
 	{name: BaseAddress, value: "127.0.0.1", usage: "Data base IP address or DNS. Ex.: 127.0.0.1"},
@@ -98,7 +99,8 @@ func setAddressInstance(envVar EnvironmentVariable) {
 		for _, a := range addrs {
 			if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 				if ipnet.IP.To4() != nil {
-					getVar(AddressInstance).value = ipnet.String()
+					getVar(AddressInstance).value = ipnet.IP.String()
+					return
 				}
 			}
 		}

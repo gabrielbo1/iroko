@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/gabrielbo1/iroko/api"
 	"github.com/gabrielbo1/iroko/config"
 	"github.com/gabrielbo1/iroko/infrastructure/repository"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
-	"net/http"
-	"time"
 )
 
 func init() {
