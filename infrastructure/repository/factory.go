@@ -2,10 +2,10 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/gabrielbo1/iroko/config"
 	"github.com/gabrielbo1/iroko/domain"
 	"github.com/gabrielbo1/iroko/domain/permission"
 	"github.com/gabrielbo1/iroko/infrastructure/repository/postgres"
+	"github.com/gabrielbo1/iroko/pkg"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	migPostgres "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -35,7 +35,7 @@ func init() {
 
 func getDataBase() *DataBase {
 	if dataBase == nil {
-		switch config.EnvironmentVariableValue(config.Base) {
+		switch pkg.ConfigVars.EnvironmentVariableValue(pkg.Base) {
 		case string(PostgreSQL):
 			var dt DataBase = PostgreSQL
 			dataBase = &dt
@@ -49,11 +49,11 @@ func getDataBase() *DataBase {
 
 //urlPostgresConnection - Url PostgreSQL driver
 func urlPostgresConnection() string {
-	connString := "host=" + config.EnvironmentVariableValue(config.BaseAddress)
-	connString += " user=" + config.EnvironmentVariableValue(config.BaseUser)
-	connString += " dbname=" + config.EnvironmentVariableValue(config.BaseName)
-	connString += " password='" + config.EnvironmentVariableValue(config.BasePassword) + "'"
-	connString += " sslmode=" + config.EnvironmentVariableValue(config.BaseSSL)
+	connString := "host=" + pkg.ConfigVars.EnvironmentVariableValue(pkg.BaseAddress)
+	connString += " user=" + pkg.ConfigVars.EnvironmentVariableValue(pkg.BaseUser)
+	connString += " dbname=" + pkg.ConfigVars.EnvironmentVariableValue(pkg.BaseName)
+	connString += " password='" + pkg.ConfigVars.EnvironmentVariableValue(pkg.BasePassword) + "'"
+	connString += " sslmode=" + pkg.ConfigVars.EnvironmentVariableValue(pkg.BaseSSL)
 	return connString
 }
 
@@ -83,7 +83,7 @@ func MigrationInit() {
 		if migrator, err = migrate.NewWithInstance(
 			"file",
 			sourceDriver,
-			config.EnvironmentVariableValue(config.BaseName),
+			pkg.ConfigVars.EnvironmentVariableValue(pkg.BaseName),
 			dbInstance); err != nil {
 			log.Fatal(err)
 		}
@@ -101,7 +101,7 @@ func FindConnection() (DB *sql.DB, err *domain.Err) {
 	log.Info("FIND CONNECTION  DATA BASE.")
 	var errDomain *domain.Err = nil
 	if DB == nil {
-		switch DataBase(config.EnvironmentVariableValue(config.Base)) {
+		switch DataBase(pkg.ConfigVars.EnvironmentVariableValue(pkg.Base)) {
 		case PostgreSQL:
 			*dataBase = PostgreSQL
 			log.Info("Data base POSTGRESQL.")

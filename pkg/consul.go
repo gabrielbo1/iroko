@@ -1,4 +1,4 @@
-package config
+package pkg
 
 import (
 	"log"
@@ -16,10 +16,10 @@ var client *api.Client
 // consul following the past settings or with the
 // standard environment settings.
 func ConsulStart(doneChan chan struct{}) {
-	if EnvironmentVariableValue(ConsulActive) == "true" {
+	if ConfigVars.EnvironmentVariableValue(ConsulActive) == "true" {
 		// build client
 		c, err := api.NewClient(&api.Config{
-			Address: EnvironmentVariableValue(ConsulAddress) + ":" + EnvironmentVariableValue(ConsulPort),
+			Address: ConfigVars.EnvironmentVariableValue(ConsulAddress) + ":" + ConfigVars.EnvironmentVariableValue(ConsulPort),
 			Scheme:  "http",
 		})
 
@@ -28,10 +28,10 @@ func ConsulStart(doneChan chan struct{}) {
 		}
 		client = c
 
-		address := EnvironmentVariableValue(AddressInstance)
+		address := ConfigVars.EnvironmentVariableValue(AddressInstance)
 
 		//Random port with Consul
-		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
+		port, _ := strconv.Atoi(ConfigVars.EnvironmentVariableValue(RandomFreePort))
 		err = os.Setenv(string(Port), strconv.Itoa(port))
 		if err != nil {
 			panic(err)
@@ -39,13 +39,13 @@ func ConsulStart(doneChan chan struct{}) {
 		log.Printf("Random port application = %v", port)
 
 		// Unic ID application.
-		id := EnvironmentVariableValue(AppName) + ":" + EnvironmentVariableValue(RandomFreePort)
+		id := ConfigVars.EnvironmentVariableValue(AppName) + ":" + ConfigVars.EnvironmentVariableValue(RandomFreePort)
 
 		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
 			Port:    port,
-			ID:      id,                                // Unique for each node
-			Name:    EnvironmentVariableValue(AppName), // Can be service type
+			ID:      id,                                           // Unique for each node
+			Name:    ConfigVars.EnvironmentVariableValue(AppName), // Can be service type
 			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
 				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
@@ -125,6 +125,9 @@ func GetConsulVariable(variable ConsulVariable) (string, error) {
 	kp, _, err := client.KV().Get(string(variable), nil)
 	if err != nil {
 		return "", err
+	}
+	if kp == nil {
+		return "", nil
 	}
 	return string(kp.Value), nil
 }
