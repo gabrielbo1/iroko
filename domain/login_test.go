@@ -3,7 +3,7 @@ package domain
 import "testing"
 
 func assertValidLogin(login *Login, t *testing.T, errCode string) {
-	if _, err := ValidLogin(login); err == nil || err.GetCode() != errCode {
+	if _, err := login.ValidLogin(); err == nil || err.GetCode() != errCode {
 		t.Error("Error code entity login, code " + errCode)
 	}
 }
@@ -24,7 +24,7 @@ func TestValidLogin(t *testing.T) {
 	assertValidLogin(login, t, "login30")
 	login.Email = "barbosa.olivera1@gmail.com"
 
-	if log, err := ValidLogin(login); log == nil || err != nil {
+	if log, err := login.ValidLogin(); log == nil || err != nil {
 		t.Error("Error valid entity login")
 	}
 }

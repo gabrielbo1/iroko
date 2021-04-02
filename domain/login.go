@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"github.com/gabrielbo1/iroko/pkg"
 	"regexp"
 )
 
@@ -16,7 +15,7 @@ type Login struct {
 }
 
 //ValidLogin - Valid entity Login.
-func ValidLogin(login *Login) (*Login, *Err) {
+func (login *Login) ValidLogin() (*Login, *Err) {
 	if login.Login == "" {
 		return nil, NewErr().WithCode("login10")
 	}
@@ -52,8 +51,8 @@ type LoginRepository interface {
 	Update(login Login) *Err
 
 	//FindByLogin - Find Login with login.
-	FindByLogin(login string) (Login, *Err)
+	FindByLogin(id int) (Login, *Err)
 
-	//FindByPage - Find by Login with name, pageable query.
-	FindByPage(name string, page pkg.Page) (pkg.Page, *Err)
+	//Delete - Delete login record with login.
+	Delete(id int) *Err
 }
