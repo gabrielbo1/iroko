@@ -109,6 +109,9 @@ func setAddressInstance(envVar EnvironmentVariable) {
 }
 
 func setRandomPort(envVar EnvironmentVariable) {
+	if envVar == RandomFreePort && getVar(Port).value != "" {
+		getVar(RandomFreePort).value = getVar(Port).value
+	}
 	if envVar == RandomFreePort && getVar(RandomFreePort).value == "" {
 		rand.Seed(time.Now().UnixNano())
 		getVar(RandomFreePort).value = strconv.Itoa(rand.Intn(20000-10000) + 10000)

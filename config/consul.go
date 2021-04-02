@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/consul/api"
-	uuid "github.com/hashicorp/go-uuid"
 )
 
 var consulActive bool
@@ -40,7 +39,7 @@ func ConsulStart(doneChan chan struct{}) {
 		log.Printf("Random port application = %v", port)
 
 		// Unic ID application.
-		id, _ := uuid.GenerateUUID()
+		id := EnvironmentVariableValue(AppName) + ":" + EnvironmentVariableValue(RandomFreePort)
 
 		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
