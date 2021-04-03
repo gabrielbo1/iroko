@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {LoginComponent} from "./login/login.component";
-import {AuthenticateService} from "./AuthenticateService";
+import { LoginComponent } from "./login/login.component";
+import { AuthenticateService } from "./AuthenticateService";
 
 
 const routes: Routes = [
   {
-    path:'login', component: LoginComponent
+    path: 'login', component: LoginComponent
   },
   {
     path: 'pages', loadChildren: () => import('src/app/pages/pages.module').then(m => m.PagesModule),
@@ -24,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
