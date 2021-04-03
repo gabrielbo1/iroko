@@ -18,6 +18,8 @@ const (
 	AppName EnvironmentVariable = "APP_NAME"
 	//HealthCheckPath - Health Chech Path.
 	HealthCheckPath EnvironmentVariable = "HEALTH_CHECH_PATH"
+	//ConsulJWTUpdatePath - JWT update notification.
+	ConsulJWTPath EnvironmentVariable = "CONSUL_JWT_NOTIFY_PATH"
 	// Port -  Server port application.
 	Port EnvironmentVariable = "PORT"
 	// ConsulActive - Case true subscribe consul.
@@ -68,8 +70,9 @@ func NewVars() {
 		ConfigVars = &Vars{
 			[]ConfiVar{
 				{name: AppName, value: "iroko", usage: "App define continaier image name and PathPrefix to API URLs."},
-				{name: HealthCheckPath, value: "/_health", usage: "Health Chech Path."},
-				{name: Port, value: "7070", usage: "Server port application."},
+				{name: HealthCheckPath, value: "/_health", usage: "Health Check Path."},
+				{name: ConsulJWTPath, value: "/_consulJwt", usage: "JWT notify get JWT key."},
+				{name: Port, value: "", usage: "Server port application."},
 				{name: ConsulActive, value: "false", usage: "Case true subscribe consul. Ex.: false"},
 				{name: ConsulAddress, value: "127.0.0.1", usage: "Consul IP address or DNS. Ex.: 127.0.0.1"},
 				{name: ConsulPort, value: "8500", usage: "Consul default port. Ex.: 8500"},
@@ -134,6 +137,7 @@ func (vars *Vars) setRandomPort(envVar EnvironmentVariable) {
 	if envVar == RandomFreePort && vars.GetVar(RandomFreePort).value == "" {
 		rand.Seed(time.Now().UnixNano())
 		vars.GetVar(RandomFreePort).value = strconv.Itoa(rand.Intn(20000-10000) + 10000)
+		vars.GetVar(Port).value = vars.GetVar(RandomFreePort).value
 	}
 }
 

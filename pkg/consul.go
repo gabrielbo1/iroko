@@ -9,7 +9,7 @@ import (
 )
 
 var consulActive bool
-var client *api.Client
+var consulClient *api.Client
 
 // ConsulStart - Checks if the Consul is enabled.
 // If you are registering for a service at the
@@ -17,7 +17,7 @@ var client *api.Client
 // standard environment settings.
 func ConsulStart(doneChan chan struct{}) {
 	if ConfigVars.EnvironmentVariableValue(ConsulActive) == "true" {
-		// build client
+		// build consulClient
 		c, err := api.NewClient(&api.Config{
 			Address: ConfigVars.EnvironmentVariableValue(ConsulAddress) + ":" + ConfigVars.EnvironmentVariableValue(ConsulPort),
 			Scheme:  "http",
@@ -26,7 +26,7 @@ func ConsulStart(doneChan chan struct{}) {
 		if err != nil {
 			panic(err)
 		}
-		client = c
+		consulClient = c
 
 		address := ConfigVars.EnvironmentVariableValue(AddressInstance)
 
@@ -41,7 +41,7 @@ func ConsulStart(doneChan chan struct{}) {
 		// Unic ID application.
 		id := ConfigVars.EnvironmentVariableValue(AppName) + ":" + ConfigVars.EnvironmentVariableValue(RandomFreePort)
 
-		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
+		err = consulClient.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
 			Port:    port,
 			ID:      id,                                           // Unique for each node
@@ -49,7 +49,7 @@ func ConsulStart(doneChan chan struct{}) {
 			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
 				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
-				Interval: "10s",
+				Interval: "60s",
 			},
 		})
 
@@ -57,7 +57,7 @@ func ConsulStart(doneChan chan struct{}) {
 			panic(err)
 		}
 
-		sessionID, _, err := client.Session().Create(&api.SessionEntry{
+		sessionID, _, err := consulClient.Session().Create(&api.SessionEntry{
 			Name:     "service/monitoring/leader", // distributed lock
 			Behavior: "delete",
 			TTL:      "10s",
@@ -67,7 +67,7 @@ func ConsulStart(doneChan chan struct{}) {
 			panic(err)
 		}
 
-		isLeader, _, err := client.KV().Acquire(&api.KVPair{
+		isLeader, _, err := consulClient.KV().Acquire(&api.KVPair{
 			Key:     "service/monitoring/leader", // distributed lock
 			Value:   []byte(sessionID),
 			Session: sessionID,
@@ -81,7 +81,7 @@ func ConsulStart(doneChan chan struct{}) {
 			// RenewPeriodic is used to periodically invoke Session.Renew on a
 			// session until a doneChan is closed. This is meant to be used in a long running
 			// goroutine to ensure a session stays valid.
-			client.Session().RenewPeriodic(
+			consulClient.Session().RenewPeriodic(
 				"90s",
 				sessionID,
 				nil,
@@ -114,20 +114,20 @@ func PutConsulVariable(variable ConsulVariable, value string) error {
 	keyPair.Key = string(variable)
 	keyPair.Value = []byte(value)
 
-	if _, e := client.KV().Put(keyPair, nil); e != nil {
+	if _, e := consulClient.KV().Put(keyPair, nil); e != nil {
 		return e
 	}
 	return nil
 }
 
 // GetConsulVariable - Retrieves simple consul variable.
-func GetConsulVariable(variable ConsulVariable) (string, error) {
-	kp, _, err := client.KV().Get(string(variable), nil)
+func GetConsulVariable(variable ConsulVariable) ([]byte, error) {
+	kp, _, err := consulClient.KV().Get(string(variable), nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if kp == nil {
-		return "", nil
+		return nil, nil
 	}
-	return string(kp.Value), nil
+	return kp.Value, nil
 }

@@ -23,7 +23,7 @@ func init() {
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "OK")
+	fmt.Fprintf(w, "OK %s:%s", pkg.ConfigVars.EnvironmentVariableValue(pkg.AppName), pkg.ConfigVars.EnvironmentVariableValue(pkg.Port))
 }
 
 func main() {
@@ -37,6 +37,7 @@ func main() {
 
 	router := api.NewRouter()
 	router.HandleFunc(pkg.ConfigVars.EnvironmentVariableValue(pkg.HealthCheckPath), health)
+	router.HandleFunc(pkg.ConfigVars.EnvironmentVariableValue(pkg.ConsulJWTPath), pkg.UpdateConsulJwt)
 	http.Handle("/", router)
 
 	n := negroni.Classic()

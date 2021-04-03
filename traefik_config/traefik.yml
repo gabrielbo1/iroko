@@ -1,0 +1,8 @@
+http:
+  # Add the router
+  routers:
+    router0:
+      entryPoints:
+        - web
+      service: iroko@consulcatalog
+      rule: Host(`api.localhost`)
