@@ -39,7 +39,10 @@ WORKDIR /root/public/
 COPY  --from=builderweb /iroko-app/dist .
 WORKDIR /root/
 COPY --from=builder /app/main .
+WORKDIR /root/infrastructure/repository/postgres/migration
+ADD ./infrastructure/repository/postgres/migration .
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+WORKDIR /root/
 RUN chmod a+x main
 CMD ["./main"]
