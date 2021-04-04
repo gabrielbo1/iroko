@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -22,16 +22,17 @@ export class LoginComponent implements OnInit {
     ]),
   });
 
-  error: string;
+  public error: string;
+  
+  constructor(private router: Router) { 
+    this.error = '';
+  }
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   submit() {
     localStorage.setItem('login', 'ok');
     this.router.navigate(['pages']);
   }
-
 }

@@ -1,35 +1,35 @@
 html, body {
-  height: 100%;
-  background: #64b5f6;
-  background: -webkit-linear-gradient(to top, #64b5f6, #6a1b9a);
-  background: -o-linear-gradient(to top, #64b5f6, #6a1b9a);
-  background: -moz-linear-gradient(to top, #64b5f6, #6a1b9a);
-  background: linear-gradient(to top, #00b8d4, #6a1b9a);
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-.spacer {
-  flex: 1 1 auto;
-}
-
-@import url(//fonts.googleapis.com/css?family=Economica);
-@import '~@angular/material/theming';
-
-$custom-typography: mat-typography-config($font-family: '"Economica", sans-serif;');
-@include mat-core($custom-typography);
-
-
-// Override typography CSS classes (e.g., mat-h1, mat-display-1, mat-typography, etc.).
-@include mat-base-typography($custom-typography);
-
-// Override typography for a specific Angular Material components.
-@include mat-checkbox-typography($custom-typography);
-
-// Override typography for all Angular Material, including mat-base-typography and all components.
-@include angular-material-typography($custom-typography);
-
-.warn-color {
-  color: #f44336;
-}
+    height: 100%;
+    background: #64b5f6;
+    background: -webkit-linear-gradient(to top, #64b5f6, #6a1b9a);
+    background: -o-linear-gradient(to top, #64b5f6, #6a1b9a);
+    background: -moz-linear-gradient(to top, #64b5f6, #6a1b9a);
+    background: linear-gradient(to top, #00b8d4, #6a1b9a);
+  }
+  body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+  }
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  @import url(//fonts.googleapis.com/css?family=Economica);
+  @import '~@angular/material/theming';
+  
+  $custom-typography: mat-typography-config($font-family: '"Economica", sans-serif;');
+  @include mat-core($custom-typography);
+  
+  
+  // Override typography CSS classes (e.g., mat-h1, mat-display-1, mat-typography, etc.).
+  @include mat-base-typography($custom-typography);
+  
+  // Override typography for a specific Angular Material components.
+  @include mat-checkbox-typography($custom-typography);
+  
+  // Override typography for all Angular Material, including mat-base-typography and all components.
+  @include angular-material-typography($custom-typography);
+  
+  .warn-color {
+    color: #f44336;
+  }

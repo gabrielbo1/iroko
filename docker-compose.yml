@@ -3,26 +3,36 @@ version: '3.4'
 services:
   #TRAEFICK E CONSUL
   consul:
-    image: consul:1.5.3
+    image: consul:1.9.4
     command: consul agent -server -dev -client=0.0.0.0 -ui -bootstrap -log-level warn
     ports:
-     - "8500:8500"
+      - "8500:8500"
     networks:
       - irokonetwork
-  
+    restart: always
+
   reverse-proxy:
-    image: traefik:v1.7-alpine
-    command: traefik --consulcatalog.endpoint=consul:8500 --api=true --docker
+    image: traefik:v2.4
+    command:
+      #- "--log.level=DEBUG"
+      - "--providers.docker=true"
+      - "--api.insecure=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--providers.consulcatalog=true"
+      - "--providers.consulcatalog.endpoint.address=consul:8500"
+      - "--providers.consulcatalog.refreshInterval=30s"
+      - "--providers.file.directory=/path/to/dynamic/conf"
     ports:
       - 80:80
       - 443:443
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik_config:/path/to/dynamic/conf
     networks:
       - irokonetwork
+    restart: always
 
 networks:
   irokonetwork:
-
-

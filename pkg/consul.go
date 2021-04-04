@@ -1,37 +1,37 @@
-package config
+package pkg
 
 import (
-	"github.com/hashicorp/consul/api"
-	uuid "github.com/hashicorp/go-uuid"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/hashicorp/consul/api"
 )
 
 var consulActive bool
-var client *api.Client
+var consulClient *api.Client
 
 // ConsulStart - Checks if the Consul is enabled.
 // If you are registering for a service at the
 // consul following the past settings or with the
 // standard environment settings.
 func ConsulStart(doneChan chan struct{}) {
-	if EnvironmentVariableValue(ConsulActive) == "true" {
-		// build client
+	if ConfigVars.EnvironmentVariableValue(ConsulActive) == "true" {
+		// build consulClient
 		c, err := api.NewClient(&api.Config{
-			Address: EnvironmentVariableValue(ConsulAddress) + ":" + EnvironmentVariableValue(ConsulPort),
+			Address: ConfigVars.EnvironmentVariableValue(ConsulAddress) + ":" + ConfigVars.EnvironmentVariableValue(ConsulPort),
 			Scheme:  "http",
 		})
 
 		if err != nil {
 			panic(err)
 		}
-		client = c
+		consulClient = c
 
-		address := "http://" + EnvironmentVariableValue(AddressInstance)
+		address := ConfigVars.EnvironmentVariableValue(AddressInstance)
 
 		//Random port with Consul
-		port, _ := strconv.Atoi(EnvironmentVariableValue(RandomFreePort))
+		port, _ := strconv.Atoi(ConfigVars.EnvironmentVariableValue(RandomFreePort))
 		err = os.Setenv(string(Port), strconv.Itoa(port))
 		if err != nil {
 			panic(err)
@@ -39,16 +39,16 @@ func ConsulStart(doneChan chan struct{}) {
 		log.Printf("Random port application = %v", port)
 
 		// Unic ID application.
-		id, _ := uuid.GenerateUUID()
+		id := ConfigVars.EnvironmentVariableValue(AppName) + ":" + ConfigVars.EnvironmentVariableValue(RandomFreePort)
 
-		err = client.Agent().ServiceRegister(&api.AgentServiceRegistration{
+		err = consulClient.Agent().ServiceRegister(&api.AgentServiceRegistration{
 			Address: address,
 			Port:    port,
-			ID:      id,                                // Unique for each node
-			Name:    EnvironmentVariableValue(AppName), // Can be service type
+			ID:      id,                                           // Unique for each node
+			Name:    ConfigVars.EnvironmentVariableValue(AppName), // Can be service type
 			Tags:    []string{"primary"},
 			Check: &api.AgentServiceCheck{
-				HTTP:     address + ":" + strconv.Itoa(port) + "/_health",
+				HTTP:     "http://" + address + ":" + strconv.Itoa(port) + "/_health",
 				Interval: "60s",
 			},
 		})
@@ -57,7 +57,7 @@ func ConsulStart(doneChan chan struct{}) {
 			panic(err)
 		}
 
-		sessionID, _, err := client.Session().Create(&api.SessionEntry{
+		sessionID, _, err := consulClient.Session().Create(&api.SessionEntry{
 			Name:     "service/monitoring/leader", // distributed lock
 			Behavior: "delete",
 			TTL:      "10s",
@@ -67,7 +67,7 @@ func ConsulStart(doneChan chan struct{}) {
 			panic(err)
 		}
 
-		isLeader, _, err := client.KV().Acquire(&api.KVPair{
+		isLeader, _, err := consulClient.KV().Acquire(&api.KVPair{
 			Key:     "service/monitoring/leader", // distributed lock
 			Value:   []byte(sessionID),
 			Session: sessionID,
@@ -81,7 +81,7 @@ func ConsulStart(doneChan chan struct{}) {
 			// RenewPeriodic is used to periodically invoke Session.Renew on a
 			// session until a doneChan is closed. This is meant to be used in a long running
 			// goroutine to ensure a session stays valid.
-			client.Session().RenewPeriodic(
+			consulClient.Session().RenewPeriodic(
 				"90s",
 				sessionID,
 				nil,
@@ -114,17 +114,20 @@ func PutConsulVariable(variable ConsulVariable, value string) error {
 	keyPair.Key = string(variable)
 	keyPair.Value = []byte(value)
 
-	if _, e := client.KV().Put(keyPair, nil); e != nil {
+	if _, e := consulClient.KV().Put(keyPair, nil); e != nil {
 		return e
 	}
 	return nil
 }
 
 // GetConsulVariable - Retrieves simple consul variable.
-func GetConsulVariable(variable ConsulVariable) (string, error) {
-	kp, _, err := client.KV().Get(string(variable), nil)
+func GetConsulVariable(variable ConsulVariable) ([]byte, error) {
+	kp, _, err := consulClient.KV().Get(string(variable), nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(kp.Value), nil
+	if kp == nil {
+		return nil, nil
+	}
+	return kp.Value, nil
 }

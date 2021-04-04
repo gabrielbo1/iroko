@@ -15,11 +15,11 @@ WORKDIR /app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 #BUILD WEB
-FROM node:13.8.0-alpine3.11 as builderweb
+FROM node:15.13.0-alpine3.13 as builderweb
 
 #Phyton
-RUN apk add --update nodejs bash python make g++ git
-RUN python --version
+#RUN apk add --update nodejs bash python make g++ git
+#dockRUN python --version
 
 # Saving libraries to different layers avoids unnecessary downloads.
 COPY /website/iroko-app/package.json ./
@@ -39,7 +39,10 @@ WORKDIR /root/public/
 COPY  --from=builderweb /iroko-app/dist .
 WORKDIR /root/
 COPY --from=builder /app/main .
+WORKDIR /root/infrastructure/repository/postgres/migration
+ADD ./infrastructure/repository/postgres/migration .
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+WORKDIR /root/
 RUN chmod a+x main
 CMD ["./main"]
