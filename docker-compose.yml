@@ -34,5 +34,34 @@ services:
       - irokonetwork
     restart: always
 
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-irokopostgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-irokopostgres}
+      POSTGRES_DB: ${POSTGRES_DB:-iroko}
+      PGDATA: /data/postgres
+      TZ: America/Sao_Paulo
+    volumes:
+      - ./postgres:/data/postgres:rw
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  iroko:
+    image: gabrielbo1/iroko-amd64:latest
+    environment:
+      - CONSUL_ACTIVE=true
+      - CONSUL_ADDRESS=consul
+      - BASE_ADDRESS=postgres
+      - BASE_USER=irokopostgres
+      - BASE_PASSWORD=irokopostgres
+    networks:
+      - irokonetwork
+    restart: always
+
 networks:
   irokonetwork:
