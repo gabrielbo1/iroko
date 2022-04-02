@@ -72,7 +72,7 @@ func NewVars() {
 				{name: AppName, value: "iroko", usage: "App define continaier image name and PathPrefix to API URLs."},
 				{name: HealthCheckPath, value: "/_health", usage: "Health Check Path."},
 				{name: ConsulJWTPath, value: "/_consulJwt", usage: "JWT notify get JWT key."},
-				{name: Port, value: "", usage: "Server port application."},
+				{name: Port, value: "9090", usage: "Server port application."},
 				{name: ConsulActive, value: "false", usage: "Case true subscribe consul. Ex.: false"},
 				{name: ConsulAddress, value: "127.0.0.1", usage: "Consul IP address or DNS. Ex.: 127.0.0.1"},
 				{name: ConsulPort, value: "8500", usage: "Consul default port. Ex.: 8500"},

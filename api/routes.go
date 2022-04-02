@@ -34,22 +34,4 @@ var routes = Routes{
 		Pattern:     "/test",
 		HandlerFunc: Test,
 	},
-	Route{
-		Name:        "UserPost",
-		Method:      http.MethodPost,
-		Pattern:     "/user",
-		HandlerFunc: PostLogin,
-	},
-	Route{
-		Name:        "UserPut",
-		Method:      http.MethodPut,
-		Pattern:     "/user",
-		HandlerFunc: PutLogin,
-	},
-	Route{
-		Name:        "UserDelete",
-		Method:      http.MethodDelete,
-		Pattern:     "/user/{id}",
-		HandlerFunc: DeleteLogin,
-	},
 }

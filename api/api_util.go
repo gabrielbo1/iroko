@@ -2,13 +2,14 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/gabrielbo1/iroko/domain"
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+
+	"github.com/gabrielbo1/iroko/domain"
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 //simpleResponsePattern - Simple response pattern.
