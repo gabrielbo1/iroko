@@ -1,14 +1,12 @@
-package api
+package pkg
 
-import (
-	"net/http"
-)
+import "net/http"
 
 //Route - Defines structure for mapping the routes that will be mapped by gorilla.
 type Route struct {
-	Name        string
-	Method      string
-	Pattern     string
+	Name        string `json:"name"`
+	Method      string `json:"method"`
+	Pattern     string `json:"pattern"`
 	HandlerFunc http.HandlerFunc
 }
 

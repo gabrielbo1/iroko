@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gabrielbo1/iroko/api"
 	"github.com/gabrielbo1/iroko/pkg"
 
 	"github.com/rs/cors"
@@ -32,7 +31,7 @@ func main() {
 
 	// pkg.ConsulStart(doneChan)
 
-	router := api.NewRouter()
+	router := pkg.NewRouter()
 	router.HandleFunc(pkg.ConfigVars.EnvironmentVariableValue(pkg.HealthCheckPath), health)
 	// router.HandleFunc(pkg.ConfigVars.EnvironmentVariableValue(pkg.ConsulJWTPath), pkg.UpdateConsulJwt)
 	// http.Handle("/", router)

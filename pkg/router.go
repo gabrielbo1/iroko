@@ -1,7 +1,6 @@
-package api
+package pkg
 
 import (
-	"github.com/gabrielbo1/iroko/pkg"
 	"net/http"
 	"time"
 
@@ -85,7 +84,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Create the JWT string with SingKey.
-	tokenString, err := token.SignedString(pkg.GetSignJwtKey())
+	tokenString, err := token.SignedString(GetSignJwtKey())
 	if !valid {
 		tokenString, err = token.SignedString([]byte("INVALID_SINGNATURE"))
 	}
@@ -114,7 +113,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		// Now, create a new token for the current use, with a renewed expiration time
 		claims.ExpiresAt = time.Now().Add(5 * time.Minute).Unix()
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		tokenString, err := token.SignedString(pkg.GetSignJwtKey())
+		tokenString, err := token.SignedString(GetSignJwtKey())
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
@@ -130,7 +129,7 @@ func Test(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTokenAndValid(w http.ResponseWriter, r *http.Request) (*jwt.Token, *Claims, bool) {
-	signingKey := pkg.GetSignJwtKey()
+	signingKey := GetSignJwtKey()
 	claims := &Claims{}
 	token, err := jwt.ParseWithClaims(r.Header.Get("Authorization"), claims, func(token *jwt.Token) (interface{}, error) {
 		return signingKey, nil
@@ -151,5 +150,5 @@ func getTokenAndValid(w http.ResponseWriter, r *http.Request) (*jwt.Token, *Clai
 // Returning user valid and modules user acess.
 func validUser(username, passowrd string) (bool, []string) {
 	return username == "gabriel" && passowrd == "12345678",
-		[]string{pkg.ConfigVars.EnvironmentVariableValue(pkg.AppName)}
+		[]string{ConfigVars.EnvironmentVariableValue(AppName)}
 }

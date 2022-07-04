@@ -48,6 +48,8 @@ const (
 	RandomFreePort = "RandomFreePort"
 	// Domain - DNS application or IP.
 	Domain = "DOMAIN"
+	// Modules - Define active modules EX.: MODULE_A, MODULE_B
+	Modules EnvironmentVariable = "MODULES"
 )
 
 //ConfiVar - Template app environment variable.
@@ -86,6 +88,7 @@ func NewVars() {
 				{name: AddressInstance, value: "", usage: "Ip application, case no set defined automatic. Ex.: 127.0.0.1"},
 				{name: RandomFreePort, value: "", usage: " RandomFreePort - free PORT, case not set defined automatic, system use free port with consul configuration. E.: 5656"},
 				{name: Domain, value: "localhost", usage: "DNS application or IP. Ex.: localhost"},
+				{name: Modules, value: "MODULE_A", usage: "Define active modules EX.: MODULE_A, MODULE_B"},
 			},
 		}
 	}
