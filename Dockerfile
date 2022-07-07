@@ -1,8 +1,8 @@
-FROM  golang:1.13.4 as builder
+FROM  golang:1.18.3 as builder
 
 LABEL maintainer="Gabriel Oliveira <barbosa.olivera1@gmail.com>"
 WORKDIR /app
-RUN go get -u github.com/nicksnyder/go-i18n/v2/goi18n
+#RUN go get -u github.com/nicksnyder/go-i18n/v2/goi18n
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
