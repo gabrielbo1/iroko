@@ -1,6 +1,10 @@
 package domain
 
-import "github.com/gabrielbo1/iroko/pkg"
+import (
+	"net/mail"
+
+	"github.com/gabrielbo1/iroko/pkg"
+)
 
 // User basic informations.
 type User struct {
@@ -16,6 +20,9 @@ func NewUser(user User) (*User, *pkg.Err) {
 		return nil, pkg.NewErr().WithCode("PERMISSION_USER_10")
 	}
 	if !pkg.NameIsValid(user.Email) {
+		return nil, pkg.NewErr().WithCode("PERMISSION_USER_20")
+	}
+	if _, err := mail.ParseAddress(user.Email); err != nil {
 		return nil, pkg.NewErr().WithCode("PERMISSION_USER_20")
 	}
 	if !pkg.NameIsValid(user.Password) {

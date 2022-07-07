@@ -1,6 +1,11 @@
 package domain
 
-import "testing"
+import (
+	"strings"
+	"testing"
+
+	"github.com/gabrielbo1/iroko/pkg"
+)
 
 func newUserTestBuild(user *User, expectedErrCode string, t *testing.T) {
 	userValid, err := NewUser(*user)
@@ -11,16 +16,23 @@ func newUserTestBuild(user *User, expectedErrCode string, t *testing.T) {
 	}
 }
 
-func NewUserTest(t *testing.T) {
+func TestNewUser(t *testing.T) {
 	user := &User{}
+	newUserTestBuild(user, "PERMISSION_USER_10", t)
+
+	user.Nick = strings.Repeat("a", pkg.MaxNameSize+1)
 	newUserTestBuild(user, "PERMISSION_USER_10", t)
 
 	user.Nick = "gabrielbo1"
 	newUserTestBuild(user, "PERMISSION_USER_20", t)
 
 	user.Nick = "gabrielbo1"
+	user.Email = strings.Repeat("a", pkg.MaxNameSize+1)
+	newUserTestBuild(user, "PERMISSION_USER_20", t)
+
+	user.Nick = "gabrielbo1"
 	user.Email = "invalid_email_user"
-	newUserTestBuild(user, "PERMISSION_USER_20h", t)
+	newUserTestBuild(user, "PERMISSION_USER_20", t)
 
 	user.Nick = "gabrielbo1"
 	user.Email = "gabrielbo1@gmail.com"

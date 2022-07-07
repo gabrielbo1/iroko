@@ -78,5 +78,9 @@ func NewRotine(rotine Rotine) (*Rotine, *pkg.Err) {
 	if rotine.Path != "" && !pkg.NameIsValid(rotine.Path) {
 		return nil, pkg.NewErr().WithCode("PERMISSION_ROTINE_30")
 	}
-	return nil, nil
+	return &Rotine{
+		SystemId: rotine.SystemId,
+		Rotine:   rotine.Rotine,
+		Path:     rotine.Path,
+	}, nil
 }

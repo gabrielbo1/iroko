@@ -17,11 +17,15 @@ func newRotineTestBuild(rotine *Rotine, expectedErrCode string, t *testing.T) {
 	}
 }
 
-func NewRotineTest(t *testing.T) {
+func TestNewRotine(t *testing.T) {
 	rotine := &Rotine{}
 	newRotineTestBuild(rotine, "PERMISSION_ROTINE_10", t)
 
 	rotine.SystemId = uuid.NewString()
+	newRotineTestBuild(rotine, "PERMISSION_ROTINE_20", t)
+
+	rotine.SystemId = uuid.NewString()
+	rotine.Rotine = strings.Repeat("a", pkg.MaxNameSize+1)
 	newRotineTestBuild(rotine, "PERMISSION_ROTINE_20", t)
 
 	rotine.SystemId = uuid.NewString()
