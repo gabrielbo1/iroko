@@ -3,6 +3,8 @@ package pkg
 import (
 	"crypto/rand"
 	"encoding/base64"
+
+	"github.com/google/uuid"
 )
 
 // GenerateRandomBytes Author: Matt Silverlock
@@ -51,4 +53,18 @@ type Page struct {
 
 	//Content - The content page.
 	Content interface{} `json:"content"`
+}
+
+//Default name size to applications.
+const MaxNameSize int = 150
+
+//NameIsValid - Valid geral name.
+func NameIsValid(name string) bool {
+	return name != "" && len(name) <= MaxNameSize
+}
+
+//UuidIsValid - Valid uuid.
+func UuidIsValid(u string) bool {
+	_, err := uuid.Parse(u)
+	return err == nil
 }

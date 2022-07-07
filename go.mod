@@ -4,6 +4,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang-migrate/migrate/v4 v4.12.2
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/consul/api v1.1.0
 	github.com/hashicorp/go-msgpack v0.5.5 // indirect
