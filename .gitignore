@@ -8,6 +8,8 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.lsp
+!.clj-kondo
 
 ### Go ###
 # Binaries for programs and plugins
