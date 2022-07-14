@@ -1,8 +1,10 @@
 package pkg
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/gob"
 
 	"github.com/google/uuid"
 )
@@ -67,4 +69,16 @@ func NameIsValid(name string) bool {
 func UuidIsValid(u string) bool {
 	_, err := uuid.Parse(u)
 	return err == nil
+}
+
+// Equals - Generical struct hash compare implementation.
+func Equals(a, b interface{}) bool {
+	return bytes.Equal(HashEncode(a), HashEncode(b))
+}
+
+// HashEncode - Generic hash encode implementation.
+func HashEncode(o interface{}) []byte {
+	var b bytes.Buffer
+	gob.NewEncoder(&b).Encode(o)
+	return b.Bytes()
 }

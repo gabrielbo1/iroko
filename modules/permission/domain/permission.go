@@ -9,6 +9,7 @@ type System struct {
 	Rotines []Rotine `json:"rotines"`
 }
 
+// NewSystem - Create valid new system entity.
 func NewSystem(system System) (*System, *pkg.Err) {
 	if !pkg.NameIsValid(system.Name) {
 		return nil, pkg.NewErr().WithCode("PERMISSION_SYSTEM_10")
@@ -68,6 +69,7 @@ type Rotine struct {
 	Path     string `json:"path"`
 }
 
+// NewRotine - Create a new valid rotine.
 func NewRotine(rotine Rotine) (*Rotine, *pkg.Err) {
 	if !pkg.UuidIsValid(rotine.SystemId) {
 		return nil, pkg.NewErr().WithCode("PERMISSION_ROTINE_10")
