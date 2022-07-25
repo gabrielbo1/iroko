@@ -43,6 +43,12 @@ func (e *Err) WithMessage(msg string) *Err {
 	return e
 }
 
+//WithMessagef - Set Message.
+func (e *Err) WithMessagef(msg string, a ...any) *Err {
+	e.message = fmt.Sprintf(msg, a...)
+	return e
+}
+
 //WithError - Set Err.
 func (e *Err) WithError(error error) *Err {
 	e.err = error

@@ -38,25 +38,6 @@ func GenerateRandomString(s int) (string, error) {
 	return base64.URLEncoding.EncodeToString(b), err
 }
 
-// Page - Paginated queries pattern.
-type Page struct {
-
-	//First - Is first page.
-	First bool `json:"first"`
-
-	//Last - Is last page.
-	Last bool `json:"last"`
-
-	//PageNumber - The page number.
-	PageNumber int `json:"pageNumber"`
-
-	//PageSize - The page size.
-	PageSize int `json:"pageSize"`
-
-	//Content - The content page.
-	Content interface{} `json:"content"`
-}
-
 //Default name size to applications.
 const MaxNameSize int = 150
 

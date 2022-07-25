@@ -9,6 +9,7 @@ import "github.com/gabrielbo1/iroko/pkg"
 // Being this abstraction to compose multi-company cases,
 // being a company for many subsidiaries.
 type Subsidiary struct {
+	Id        string   `json:"id"`
 	CompanyId string   `json:"company_id"`
 	Name      string   `json:"name"`
 	Systems   []System `json:"systems"`
